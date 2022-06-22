@@ -7,10 +7,6 @@ import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
 class RandomChar extends Component {
-    constructor(props) {
-        super(props) 
-    }
-
     state = {
         char: {},
         loading: true,
@@ -21,7 +17,6 @@ class RandomChar extends Component {
 
     componentDidMount() {
         this.updateChar();
-        // this.timerId = setInterval(this.updateChar, 5000);
     }
 
     componentWillUnmount() {
