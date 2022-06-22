@@ -81,7 +81,7 @@ const View = ({char}) => {
     let styles = {};
 
     if (thumbnail.includes('not_available')) {
-        styles = {objectFit: 'cover'}
+        styles = {objectFit: 'contain'}
     }
 
     return (
