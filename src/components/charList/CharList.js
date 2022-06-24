@@ -15,10 +15,7 @@ class CharList extends Component {
     marvelService = new MarvelService();
 
     componentDidMount() {
-        this.marvelService
-            .getAllCharacters()
-            .then(this.setCharacters)
-            .catch(this.onError);
+        this.updateCharacters();
     }
 
     setCharacters = (res) => {
@@ -33,6 +30,13 @@ class CharList extends Component {
             error: true,
             loading: false
         })
+    }
+
+    updateCharacters = () => {
+        this.marvelService
+            .getAllCharacters()
+            .then(this.setCharacters)
+            .catch(this.onError);
     }
 
     renderItems = (arr) => {

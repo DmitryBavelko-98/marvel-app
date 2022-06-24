@@ -1,6 +1,7 @@
 import { Component } from 'react';
 
 import './randomChar.scss';
+import mjolnir from '../../resources/img/mjolnir.png'
 import MarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -31,7 +32,7 @@ class RandomChar extends Component {
         });
     }
 
-    onHandleError = () => {
+    onError = () => {
         this.setState({
             loading: false,
             error: true,
@@ -70,6 +71,7 @@ class RandomChar extends Component {
                     <button onClick={this.updateChar} className="button button__main">
                         <div className="inner">try it</div>
                     </button>
+                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
                 </div>
             </div>
         )
