@@ -1,7 +1,6 @@
 import { Component } from 'react/cjs/react.production.min';
 
 import './charList.scss';
-import CharItem from '../charItem/CharItem'
 import MarvelService from '../../services/MarvelService';
 
 class CharList extends Component {
@@ -27,17 +26,37 @@ class CharList extends Component {
             .then(res => this.setCharacters(res));
     }
 
-    render() {
-        const {characters} = this.state;
-        let cards = characters.map(char => {
-            const {id, name, thumbnail} = char;
-            return (
-                <CharItem 
+    renderItems = (items) => {
+        let cards = items.map(item => {
+            const {id, name, thumbnail} = item;
+
+            let styles = {};
+
+            if (thumbnail.includes('not_available')) {
+                styles = {objectFit: 'unset'}
+            } 
+
+            return (         
+                <li className="char__item"
                     key={id}
-                    name={name} 
-                    thumbnail={thumbnail}/>
+                    onClick={() => this.props.onCharSelected(id)}>
+                    <img style={styles} src={thumbnail} alt={name}/>
+                    <div className="char__name">{name}</div>
+                </li>
             );
         })
+
+        return (
+            <ul className="char__grid">
+                {cards}
+            </ul>
+        )
+    }
+
+    render() {
+        const {characters} = this.state;
+
+        let cards = this.renderItems(characters);
 
         return (
             <div className="char__list">
