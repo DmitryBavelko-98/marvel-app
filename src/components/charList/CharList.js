@@ -1,33 +1,42 @@
 import { Component } from 'react/cjs/react.production.min';
 
 import './charList.scss';
+import Spinner from '../spinner/Spinner';
+import ErrorMessage from '../errorMessage/ErrorMessage';
 import MarvelService from '../../services/MarvelService';
 
 class CharList extends Component {
     state = {
-        characters: []
+        characters: [],
+        loading: true,
+        error: false,
     }
     
     marvelService = new MarvelService();
 
     componentDidMount() {
-        this.updateCharacters();
+        this.marvelService
+            .getAllCharacters()
+            .then(this.setCharacters)
+            .catch(this.onError);
     }
 
     setCharacters = (res) => {
         this.setState({
-            characters: [...res]
+            characters: [...res],
+            loading: false
         })
     }
 
-    updateCharacters = () => {
-        this.marvelService
-            .getAllCharacters()
-            .then(res => this.setCharacters(res));
+    onError = () => {
+        this.setState({
+            error: true,
+            loading: false
+        })
     }
 
-    renderItems = (items) => {
-        let cards = items.map(item => {
+    renderItems = (arr) => {
+        const items = arr.map(item => {
             const {id, name, thumbnail} = item;
 
             let styles = {};
@@ -48,21 +57,25 @@ class CharList extends Component {
 
         return (
             <ul className="char__grid">
-                {cards}
+                {items}
             </ul>
         )
     }
 
     render() {
-        const {characters} = this.state;
+        const {characters, loading, error} = this.state;
 
         let cards = this.renderItems(characters);
 
+        const errorMessage = error ? <ErrorMessage/> : null;
+        const spinner = loading ? <Spinner/> : null;
+        const content = !(loading || error) ? cards : null; 
+
         return (
             <div className="char__list">
-                <ul className="char__grid">
-                    {cards}
-                </ul>
+                {errorMessage}
+                {spinner}
+                {content}
                 <button className="button button__main button__long">
                     <div className="inner">load more</div>
                 </button>
