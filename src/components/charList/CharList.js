@@ -1,4 +1,5 @@
-import { Component } from 'react/cjs/react.production.min';
+import React, { Component } from 'react/cjs/react.production.min';
+import PropTypes from 'prop-types';
 
 import './charList.scss';
 import Spinner from '../spinner/Spinner';
@@ -11,9 +12,11 @@ class CharList extends Component {
         loading: true,
         error: false,
         newItemLoading: false,
-        offset: 1541,
+        offset: 210,
         charEnded: false,
     }
+
+    myRef = React.createRef();
     
     marvelService = new MarvelService();
 
@@ -56,8 +59,21 @@ class CharList extends Component {
         })
     }
 
+    itemRefs = [];
+
+    setRef = ref => {
+        this.itemRefs.push(ref);
+        console.log(ref);
+    }
+
+    focusOnItem = (id) => {
+        this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
+        this.itemRefs[id].classList.add('char__item_selected');
+        this.itemRefs[id].focus()
+    }
+
     renderItems = (arr) => {
-        const items = arr.map(item => {
+        const items = arr.map((item, i) => {
             const {id, name, thumbnail} = item;
 
             let styles = {};
@@ -68,8 +84,12 @@ class CharList extends Component {
 
             return (         
                 <li className="char__item"
+                    ref={this.setRef}
                     key={id}
-                    onClick={() => this.props.onCharSelected(id)}>
+                    onClick={() => {
+                        this.props.onCharSelected(id);
+                        this.focusOnItem(i);
+                    }}>
                     <img style={styles} src={thumbnail} alt={name}/>
                     <div className="char__name">{name}</div>
                 </li>
@@ -107,6 +127,10 @@ class CharList extends Component {
             </div>
         )
     }
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func.isRequired
 }
 
 export default CharList;
