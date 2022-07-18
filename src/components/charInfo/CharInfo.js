@@ -8,6 +8,7 @@ import Skeleton from '../skeleton/Skeleton'
 import MarvelService from '../../services/MarvelService';
 
 const CharInfo = (props) => {
+
     const [char, setChar] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -20,7 +21,7 @@ const CharInfo = (props) => {
 
     useEffect(() => {
         updateChar();
-    }, [char]);
+    }, [props.charId]);
 
     const updateChar = () => {
         const {charId} = props;
