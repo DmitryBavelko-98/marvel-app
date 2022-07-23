@@ -19,7 +19,9 @@ const App = () => {
         <div className="app">
             <AppHeader/>
             <main>
-                <ErrorBoundary><RandomChar/></ErrorBoundary>
+                <ErrorBoundary>
+                    <RandomChar/>
+                </ErrorBoundary>
                 <div className="char__content">
                     <ErrorBoundary>
                         <CharList onCharSelected={onCharSelected}/>
