@@ -38,15 +38,11 @@ const CharSearchForm = () => {
     return (
         <div className="char__search-form">
             <Formik
-                initialValues = {{
-                    charName: ''
-                }}
-                validationSchema = {Yup.object({
-                    charName: Yup.string().required('This field is required')
-                })}
-                onSubmit = { ({charName}) => {
-                    updateChar(charName);
-                }}
+               initialValues={{
+                charName: ''
+               }}
+               validationSchema={Yup.object({charName: Yup.string().required('This field is required')})}
+               onSubmit={({charName}) => updateChar(charName)}
             >
                 <Form>
                     <label className="char__search-label" htmlFor="charName">Or find a character by name:</label>
