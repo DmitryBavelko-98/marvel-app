@@ -1,4 +1,5 @@
 import {useState, useEffect, useRef} from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
 
 import './charList.scss';
@@ -55,22 +56,26 @@ const CharList = (props) => {
             } 
 
             return (         
-                <li className="char__item"
-                    ref={el => itemRefs.current[i] = el}
-                    key={id}
-                    onClick={() => {
-                        props.onCharSelected(id);
-                        focusOnItem(i);
-                    }}>
-                    <img style={styles} src={thumbnail} alt={name}/>
-                    <div className="char__name">{name}</div>
-                </li>
+                <CSSTransition key={id} timeout={300} classNames={'char__item'}>
+                    <li className="char__item"
+                        ref={el => itemRefs.current[i] = el}
+                        tabIndex={0}
+                        onClick={() => {
+                            props.onCharSelected(id);
+                            focusOnItem(i);
+                        }}>
+                        <img style={styles} src={thumbnail} alt={name}/>
+                        <div className="char__name">{name}</div>
+                    </li>
+                </CSSTransition>
             );
         })
 
         return (
             <ul className="char__grid">
-                {items}
+                <TransitionGroup component={null}>
+                    {items}
+                </TransitionGroup>
             </ul>
         )
     }

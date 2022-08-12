@@ -6,6 +6,7 @@ import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 import Spinner from "../spinner/Spinner";
 
 import decoration from '../../resources/img/vision.png';
+import CharSearchForm from "../charSearchForm/CharSearchForm";
 
 const CharInfo = lazy(() => import('../charInfo/CharInfo'));
 
@@ -25,11 +26,16 @@ const MainPage = () => {
                 <ErrorBoundary>
                     <CharList onCharSelected={onCharSelected}/>
                 </ErrorBoundary>
-                <Suspense fallback={<Spinner/>}>
+                <div>
+                    <Suspense fallback={<Spinner/>}>
+                        <ErrorBoundary>
+                            <CharInfo charId={selectedChar}/>
+                        </ErrorBoundary>
+                    </Suspense>
                     <ErrorBoundary>
-                        <CharInfo charId={selectedChar}/>
+                        <CharSearchForm/>
                     </ErrorBoundary>
-                </Suspense>
+                </div>
             </div>
             <img className="bg-decoration" src={decoration} alt="vision"/>
         </>

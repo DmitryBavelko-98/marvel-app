@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import useMarvelService from '../../services/MarvelService';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -43,19 +44,23 @@ const ComicsList = () => {
             const {id, thumbnail, title, price} = item;
 
             return (
-                <li key={i} className="comics__item">
-                    <Link to={`/marvel-app/comics/${id}`}>
-                        <img src={thumbnail} alt="ultimate war" className="comics__item-img"/>
-                        <div className="comics__item-name">${title}</div>
-                        <div className="comics__item-price">${price}</div>
-                    </Link>
-                </li>
+                <CSSTransition key={i} timeout={300} classNames={'comics__item'}>
+                    <li className="comics__item" tabIndex={0}>
+                        <Link to={`/marvel-app/comics/${id}`}>
+                            <img src={thumbnail} alt="ultimate war" className="comics__item-img"/>
+                            <div className="comics__item-name">${title}</div>
+                            <div className="comics__item-price">${price}</div>
+                        </Link>
+                    </li>
+                </CSSTransition>
             )
        })
 
        return (
         <ul className="comics__grid">
-            {items}
+            <TransitionGroup component={null}>
+                {items}
+            </TransitionGroup>
         </ul>
        )
     }   
