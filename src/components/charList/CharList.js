@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useMemo} from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
 
@@ -34,6 +34,7 @@ const CharList = (props) => {
 
     useEffect(() => {
         onRequest(offset, true);
+        //eslint-disable-next-line
     }, []);
 
     const onRequest = (offset, initial) => {
@@ -43,15 +44,15 @@ const CharList = (props) => {
             .then(() => setProcess('confirmed'));
     }
 
-    const onCharListLoaded = (newCharList) => {
+    const onCharListLoaded = async (newCharList) => {
         let ended = false;
         if (newCharList.length < 9) {
             ended = true;
         }
-        setCharList(charList => [...charList, ...newCharList]);
-        setNewItemLoading(newItemLoading => false);
+        setCharList([...charList, ...newCharList]);
+        setNewItemLoading(false);
         setOffset(offset => offset + 9);
-        setCharEnded(charEnded => ended);
+        setCharEnded(ended);
     }
 
     const itemRefs = useRef([]);
@@ -62,24 +63,29 @@ const CharList = (props) => {
         itemRefs.current[id].focus()
     }
 
-    function renderItems(arr) {
+    const renderItems = arr  => {
+        console.log('render');
         const items = arr.map((item, i) => {
             const {id, name, thumbnail} = item;
-
             let styles = {};
 
             if (thumbnail.includes('not_available')) {
                 styles = {objectFit: 'unset'}
             } 
-
             return (         
-                <CSSTransition key={id} timeout={300} classNames={'char__item'}>
+                <CSSTransition key={id} timeout={300} classNames='char__item'>
                     <li className="char__item"
                         ref={el => itemRefs.current[i] = el}
                         tabIndex={0}
                         onClick={() => {
                             props.onCharSelected(id);
                             focusOnItem(i);
+                        }}
+                        onKeyPress={e => {
+                            if (e.key === ' ' || e.key === 'Enter') {
+                                props.onCharSelected(id);
+                                focusOnItem(i);
+                            }
                         }}>
                         <img style={styles} src={thumbnail} alt={name}/>
                         <div className="char__name">{name}</div>
@@ -97,9 +103,14 @@ const CharList = (props) => {
         )
     }
 
+    const elements = useMemo(() => {
+        return setContent(process, () => renderItems(charList), newItemLoading);
+        //eslint-disable-next-line
+    }, [process]);
+
     return (
         <div className="char__list">
-            {setContent(process, () => renderItems(charList), newItemLoading)}
+            {elements}
             <button 
                 className="button button__main button__long"
                 disabled={newItemLoading}
